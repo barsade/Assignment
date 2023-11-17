@@ -16,14 +16,21 @@ namespace Assignment.DosProtection.DM.Models
 
         // This object is used for locking to ensure thread safety.
         private readonly object lockObject = new object();
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public DosClient()
         {
 
         }
 
+        public bool CheckIPAddress(string ipAddress)
+        {
+            return true;
+        }
+
         public bool CheckRequestRate(ProtectionType protectionType)
         {
+            // Lock the object to ensure thread safety.
             lock (lockObject)
             {
                 // Get the current time.
