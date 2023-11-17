@@ -49,7 +49,6 @@ namespace Assignment.Controllers
                 _logger.LogError($"[DosProtectionController:StaticWindow] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
                 return HttpStatusCode.InternalServerError;
             }
-            
         }
 
         [HttpGet("DynamicWindow/{clientId}")]
@@ -79,7 +78,6 @@ namespace Assignment.Controllers
                 _logger.LogError($"[DosProtectionController:DynamicWindow] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
                 return HttpStatusCode.InternalServerError;
             }
-
         }
     }
 }
