@@ -39,6 +39,7 @@ namespace Assignment.DosProtection.DM.Models
                     // If the client has made more than 5 requests within the time frame, return an error.
                     if (requestCounter > maxRequestsPerFrame)
                     {
+                        // If the protection type is dynamic, update the last request time.
                         if (protectionType == ProtectionType.Dynamic)
                         {
                             requestTime = now;

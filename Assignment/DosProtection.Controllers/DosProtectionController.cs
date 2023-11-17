@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Assignment.DosProtection.DM.Enum;
 using Assignment.DosProtection.DM.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
-
+using Microsoft.AspNetCore.Http.Features;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http.Connections.Features;
 
 namespace Assignment.Controllers
 {
@@ -17,12 +19,17 @@ namespace Assignment.Controllers
         {
             _dosProtectionService = dosProtectionService;
         }
-
-        [HttpGet("StaticWindow/{clientld}")]
-        public async Task<HttpStatusCode> StaticWindow(string clientld)
+        
+        [HttpGet("StaticWindow/{clientIdentifier}")]
+        public async Task<HttpStatusCode> StaticWindow(string clientIdentifier)
         {
-            //string clientIp = HttpContext.Connection.RemoteIpAddress.ToString();
-            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientld, "", ProtectionType.Static));
+            string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+            if (string.IsNullOrEmpty(clientIdentifier))
+            {
+                return HttpStatusCode.BadRequest;
+            }
+            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientIdentifier, "", ProtectionType.Static));
 
             if (result)
             {
@@ -37,7 +44,9 @@ namespace Assignment.Controllers
         [HttpGet("DynamicWindow/{clientId}")]
         public async Task<HttpStatusCode> DynamicWindow(string clientId)
         {
-            //string clientIp = HttpContext.Connection.RemoteIpAddress.ToString();
+            var connectionFeature = HttpContext.Features.Get<IHttpConnectionFeature>();
+            string clientIpAddress = connectionFeature?.RemoteIpAddress.ToString();
+
             bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientId, "", ProtectionType.Dynamic));
 
             if (result)
