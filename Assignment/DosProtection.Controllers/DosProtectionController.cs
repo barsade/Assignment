@@ -25,10 +25,6 @@ namespace Assignment.Controllers
         {
             string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-            if (string.IsNullOrEmpty(clientIdentifier))
-            {
-                return HttpStatusCode.BadRequest;
-            }
             bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientIdentifier, "", ProtectionType.Static));
 
             if (result)
