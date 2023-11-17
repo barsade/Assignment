@@ -13,11 +13,17 @@ namespace Assignment.DosProtection.DM.Models
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
+        private ProtectionType _protectionType;
 
         // This object is used for locking to ensure thread safety.
         private readonly object lockObject = new object();
 
-        public bool CheckRequestRate(ProtectionType protectionType)
+        public DosProtectionClient(ProtectionType protectionType)
+        {
+             _protectionType = protectionType;
+        }
+
+        public bool CheckRequestRate(/*ProtectionType protectionType*/)
         {
             // Lock the object to ensure thread safety.
             lock (lockObject)
@@ -40,7 +46,7 @@ namespace Assignment.DosProtection.DM.Models
                     if (requestCounter > maxRequestsPerFrame)
                     {
                         // If the protection type is dynamic, update the last request time.
-                        if (protectionType == ProtectionType.Dynamic)
+                        if (_protectionType == ProtectionType.Dynamic)
                         {
                             requestTime = now;
                         }

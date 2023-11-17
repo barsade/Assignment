@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddSerilog(logger);
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IDosProtectionService, DosProtectionService>();
-builder.Services.AddTransient<IDosProtectionClient, DosProtectionClient>();
+//builder.Services.AddTransient<IDosProtectionClient, DosProtectionClient>();
 
 var app = builder.Build();
 

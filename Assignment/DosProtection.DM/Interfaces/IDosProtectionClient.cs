@@ -4,6 +4,6 @@ namespace Assignment.DosProtection.DM.Interfaces
 {
     public interface IDosProtectionClient
     {
-        public bool CheckRequestRate(ProtectionType protectionType);
+        public bool CheckRequestRate();
     }
 }
