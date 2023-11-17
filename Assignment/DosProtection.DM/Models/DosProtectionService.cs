@@ -8,16 +8,14 @@ namespace Assignment.DosProtection.DM.Models
     // This is the implementation of the DosProtectionService.
     public class DosProtectionService : IDosProtectionService
     {
-        // This dictionary stores DosClient instances for each client identified by clientIdentifier.
-        private readonly DosClient _dosClient;
-        private readonly ConcurrentDictionary<string, DosClient> _staticWindowClients = new ConcurrentDictionary<string, DosClient>();
-        private readonly ConcurrentDictionary<string, DosClient> _dynamicWindowClients = new ConcurrentDictionary<string, DosClient>();
+        // This dictionary stores DosProtectionClient instances for each client identified by clientId.
+        private readonly ConcurrentDictionary<string, IDosProtectionClient> _staticWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
+        private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
         private readonly IMemoryCache _cache;
 
-        public DosProtectionService(DosClient dosClient, IMemoryCache cache)
+        public DosProtectionService(IMemoryCache cache, IDosProtectionClient dosProtectionClient)
         {
             _cache = cache;
-            _dosClient = dosClient;
         }
 
         // This method checks if the client identified by clientId can make another request.
@@ -25,10 +23,10 @@ namespace Assignment.DosProtection.DM.Models
         {
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
-            // Get or add a DosClient instance for the clientId.
-            var dosClient = windowClients.GetOrAdd(clientId, _dosClient);
+            // Get or add a DosProtectionClient instance for the clientId.
+            var dosClient = windowClients.GetOrAdd(clientId, new DosProtectionClient());
 
-            // Call the CheckRequestRate method of the DosClient instance.
+            // Call the CheckRequestRate method of the DosProtectionClient instance.
             return dosClient.CheckRequestRate(protectionType);
         }
     }

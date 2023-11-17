@@ -25,9 +25,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddSerilog(logger);
 builder.Services.AddMemoryCache();
-builder.Services.AddTransient<DosClient>();
-builder.Services.AddSingleton<ConcurrentDictionary<string, DosClient>>();
 builder.Services.AddSingleton<IDosProtectionService, DosProtectionService>();
+builder.Services.AddTransient<IDosProtectionClient, DosProtectionClient>();
 
 var app = builder.Build();
 
