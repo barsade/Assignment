@@ -31,10 +31,8 @@ namespace Assignment.DosProtection.DM.Models
         /// <summary>
         /// Checks if the client can make another request within the specified time frame and request limits.
         /// </summary>
-        /// <param name="protectionType">The ProtectionType indicating the type of DOS protection to apply.</param>
         /// <returns>
-        ///   <c>true</c> if the client is allowed to make another request within the defined limits,
-        ///   <c>false</c> otherwise.
+        ///   True if the client is allowed to make another request within the defined limits; otherwise, false.
         /// </returns>
         public bool CheckRequestRate(ProtectionType protectionType)
         {

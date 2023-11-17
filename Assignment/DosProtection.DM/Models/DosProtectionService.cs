@@ -30,12 +30,8 @@ namespace Assignment.DosProtection.DM.Models
         /// Checks if a client identified by clientId can make another request based on the specified ProtectionType.
         /// This method also considers the client's IP address when determining request eligibility.
         /// </summary>
-        /// <param name="clientId">The unique identifier of the client making the request.</param>
-        /// <param name="clientIpAddress">The IP address of the client making the request.</param>
-        /// <param name="protectionType">The ProtectionType indicating the type of DOS protection to apply.</param>
         /// <returns>
-        ///   <c>true</c> if the client is allowed to make another request within the defined limits,
-        ///   <c>false</c> otherwise.
+        ///   True if the client is allowed to make another request within the defined limits; otherwise, false.
         /// </returns>
         public bool CheckRequestRate(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
