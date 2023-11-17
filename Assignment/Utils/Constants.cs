@@ -7,8 +7,8 @@
         {
             _config = config;
         }
-        public static readonly string MAX_REQUESTS_ALLOWED = "MaxRequestsAllowed";
+
         public static readonly string MAX_REQUESTS_PER_FRAME = "MaxRequestsAllowed";
-        public static readonly string TIME_FRAME_TRESHOLD = "TimeFrameTreshold";
+        public static readonly string TIME_FRAME_THRESHOLD = "TimeFrameTreshold";
     }
 }

@@ -26,14 +26,25 @@ namespace Assignment.DosProtection.DM.Models
             _logger = logger;
         }
 
-        // This method checks if the client identified by clientId can make another request.
-        // This method also checks if the client's IP address can make another request.
+        /// <summary>
+        /// Checks if a client identified by clientId can make another request based on the specified ProtectionType.
+        /// This method also considers the client's IP address when determining request eligibility.
+        /// </summary>
+        /// <param name="clientId">The unique identifier of the client making the request.</param>
+        /// <param name="clientIpAddress">The IP address of the client making the request.</param>
+        /// <param name="protectionType">The ProtectionType indicating the type of DOS protection to apply.</param>
+        /// <returns>
+        ///   <c>true</c> if the client is allowed to make another request within the defined limits,
+        ///   <c>false</c> otherwise.
+        /// </returns>
         public bool CheckRequestRate(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
-            // Get or add a DosProtectionClient instance for the clientId.
+            // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.
             var dosClient = windowClients.GetOrAdd(clientId, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
+
+            // Get or add a DosProtectionClient instance for the client's IP address from cache.
             var dosClientIp = _cache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
             // Call the CheckRequestRate method of the DosProtectionClient instance.

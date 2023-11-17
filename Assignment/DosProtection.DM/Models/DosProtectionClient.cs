@@ -10,8 +10,8 @@ namespace Assignment.DosProtection.DM.Models
 
         // This field keeps track of the number of requests made by the client.
         private int requestCounter = 0;
-        private static int maxRequestsPerFrame;
-        private static int timeFrameThreshold;
+        private static int MAX_REQUESTS_PER_FRAME;
+        private static int TIME_FRAME_THRESHOLD;
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
@@ -24,10 +24,18 @@ namespace Assignment.DosProtection.DM.Models
         public DosProtectionClient(IConfiguration config)
         {
             _config = config;
-            maxRequestsPerFrame = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
-            timeFrameThreshold = int.Parse(_config[Constants.TIME_FRAME_TRESHOLD]);
+            MAX_REQUESTS_PER_FRAME = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
+            TIME_FRAME_THRESHOLD = int.Parse(_config[Constants.TIME_FRAME_THRESHOLD]);
         }
 
+        /// <summary>
+        /// Checks if the client can make another request within the specified time frame and request limits.
+        /// </summary>
+        /// <param name="protectionType">The ProtectionType indicating the type of DOS protection to apply.</param>
+        /// <returns>
+        ///   <c>true</c> if the client is allowed to make another request within the defined limits,
+        ///   <c>false</c> otherwise.
+        /// </returns>
         public bool CheckRequestRate(ProtectionType protectionType)
         {
             // Lock the object to ensure thread safety.
@@ -38,7 +46,7 @@ namespace Assignment.DosProtection.DM.Models
 
                 // If the client hasn't made any requests or the last request was more than 5 seconds ago,
                 // start a new time frame.
-                if (requestCounter == 0 || now - requestTime > TimeSpan.FromSeconds(15))
+                if (requestCounter == 0 || now - requestTime > TimeSpan.FromSeconds(TIME_FRAME_THRESHOLD))
                 {
                     requestTime = now;  // Update the last request time.
                     requestCounter = 1;   // Reset the request count.
@@ -48,7 +56,7 @@ namespace Assignment.DosProtection.DM.Models
                     requestCounter++;
 
                     // If the client has made more than 5 requests within the time frame, return an error.
-                    if (requestCounter > maxRequestsPerFrame)
+                    if (requestCounter > MAX_REQUESTS_PER_FRAME)
                     {
                         // If the protection type is dynamic, update the last request time.
                         if (_protectionType == ProtectionType.Dynamic)
