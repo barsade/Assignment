@@ -35,7 +35,7 @@ namespace Assignment.DosProtection.DM.Models
         /// </returns>
         public bool CheckRequestRate(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
-            _logger.LogInformation($"[DosProtectionService:CheckRequestRate] Validating if clientId: {clientId} with IP address: {clientIpAddress} is permitted.");
+            _logger.LogDebug($"[DosProtectionService:CheckRequestRate] Starts processing request of clientId: {clientId} with IP address: {clientIpAddress}.");
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.

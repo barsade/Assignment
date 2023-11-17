@@ -11,7 +11,7 @@ namespace Assignment.DosProtection.DM.Models
         // This field keeps track of the number of requests made by the client.
         private int requestCounter = 0;
         private static int MAX_REQUESTS_PER_FRAME = 5;
-        private static int TIME_FRAME_THRESHOLD = 5;
+        private static int TIME_FRAME_THRESHOLD = 15;
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
@@ -44,7 +44,6 @@ namespace Assignment.DosProtection.DM.Models
             {
                 _logger.LogDebug("[DosProtectionClient:CheckRequestRate] Thread obtained lock. Starts validating.");
 
-                // Get the current time.
                 var now = DateTime.UtcNow;
 
                 // If the client hasn't made any requests or the last request was more than 5 seconds ago,
