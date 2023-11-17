@@ -20,12 +20,12 @@ namespace Assignment.Controllers
             _dosProtectionService = dosProtectionService;
         }
         
-        [HttpGet("StaticWindow/{clientIdentifier}")]
-        public async Task<HttpStatusCode> StaticWindow(string clientIdentifier)
+        [HttpGet("StaticWindow/{clientId}")]
+        public async Task<HttpStatusCode> StaticWindow(string clientId)
         {
             string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientIdentifier, "", ProtectionType.Static));
+            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientId, clientIpAddress, ProtectionType.Static));
 
             if (result)
             {
@@ -43,7 +43,7 @@ namespace Assignment.Controllers
             var connectionFeature = HttpContext.Features.Get<IHttpConnectionFeature>();
             string clientIpAddress = connectionFeature?.RemoteIpAddress.ToString();
 
-            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientId, "", ProtectionType.Dynamic));
+            bool result = await Task.Run(() => _dosProtectionService.CheckRequestRate(clientId, clientIpAddress, ProtectionType.Dynamic));
 
             if (result)
             {
