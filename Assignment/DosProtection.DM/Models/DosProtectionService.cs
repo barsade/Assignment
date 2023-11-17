@@ -39,11 +39,5 @@ namespace Assignment.DosProtection.DM.Models
             // Call the CheckRequestRate method of the DosProtectionClient instance.
             return dosClient.CheckRequestRate(protectionType) && dosClientIp.CheckRequestRate(protectionType);
         }
-
-        private IDosProtectionClient CreateDosProtectionClient(ProtectionType protectionType)
-        {
-            // You can use a factory method or dependency injection to create instances of IDosProtectionClient.
-            return new DosProtectionClient(_config);
-        }
     }
 }
