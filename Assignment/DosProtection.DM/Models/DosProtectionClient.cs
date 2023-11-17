@@ -10,22 +10,25 @@ namespace Assignment.DosProtection.DM.Models
 
         // This field keeps track of the number of requests made by the client.
         private int requestCounter = 0;
-        private static int MAX_REQUESTS_PER_FRAME;
-        private static int TIME_FRAME_THRESHOLD;
+        private static int MAX_REQUESTS_PER_FRAME = 5;
+        private static int TIME_FRAME_THRESHOLD = 5;
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
         private ProtectionType _protectionType;
         private readonly IConfiguration _config;
+        private readonly ILogger<DosProtectionClient> _logger;
 
         // This object is used for locking to ensure thread safety.
         private readonly object lockObject = new object();
 
-        public DosProtectionClient(IConfiguration config)
+        public DosProtectionClient(IConfiguration config, ILogger<DosProtectionClient> logger)
         {
             _config = config;
-            MAX_REQUESTS_PER_FRAME = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
-            TIME_FRAME_THRESHOLD = int.Parse(_config[Constants.TIME_FRAME_THRESHOLD]);
+            _logger = logger;
+            //MAX_REQUESTS_PER_FRAME = int.Parse(_config["MaxRequestsAllowed"]);
+            //MAX_REQUESTS_PER_FRAME = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
+            //TIME_FRAME_THRESHOLD = int.Parse(_config[Constants.TIME_FRAME_THRESHOLD]);
         }
 
         /// <summary>
@@ -39,6 +42,8 @@ namespace Assignment.DosProtection.DM.Models
             // Lock the object to ensure thread safety.
             lock (lockObject)
             {
+                _logger.LogDebug("[DosProtectionClient:CheckRequestRate] Thread obtained lock. Starts validating.");
+
                 // Get the current time.
                 var now = DateTime.UtcNow;
 
@@ -61,11 +66,14 @@ namespace Assignment.DosProtection.DM.Models
                         {
                             requestTime = now;
                         }
+                        _logger.LogInformation("[DosProtectionClient:CheckRequestRate] Client is not allowed to make another request.");
                         return false;
                     }
                 }
 
                 // The client is allowed to make another request.
+                _logger.LogInformation("[DosProtectionClient:CheckRequestRate] Client is allowed to make another request.");
+                _logger.LogDebug("[DosProtectionClient:CheckRequestRate] Thread released lock.");
                 return true;
             }
         }

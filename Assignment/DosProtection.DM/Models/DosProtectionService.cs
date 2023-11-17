@@ -27,14 +27,15 @@ namespace Assignment.DosProtection.DM.Models
         }
 
         /// <summary>
-        /// Checks if a client identified by clientId can make another request based on the specified ProtectionType.
-        /// This method also considers the client's IP address when determining request eligibility.
+        /// Checks if the client can make another request within the specified time frame
+        /// based on the client's IP address and client identifier.
         /// </summary>
         /// <returns>
         ///   True if the client is allowed to make another request within the defined limits; otherwise, false.
         /// </returns>
         public bool CheckRequestRate(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
+            _logger.LogInformation($"[DosProtectionService:CheckRequestRate] Validating if clientId: {clientId} with IP address: {clientIpAddress} is permitted.");
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.
