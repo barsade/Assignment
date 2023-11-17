@@ -1,6 +1,7 @@
 ﻿using Assignment.DosProtection.DM.Enum;
 using Assignment.DosProtection.DM.Interfaces;
 using Assignment.Utils;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Assignment.DosProtection.DM.Models
 {
@@ -14,16 +15,19 @@ namespace Assignment.DosProtection.DM.Models
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
         private ProtectionType _protectionType;
+        private readonly IConfiguration _config;
 
         // This object is used for locking to ensure thread safety.
         private readonly object lockObject = new object();
 
-        public DosProtectionClient(ProtectionType protectionType)
+        public DosProtectionClient(IConfiguration config)
         {
-             _protectionType = protectionType;
+            //_protectionType = protectionType;
+            _config = config;
+            var str = _config["A"];
         }
 
-        public bool CheckRequestRate(/*ProtectionType protectionType*/)
+        public bool CheckRequestRate(ProtectionType protectionType)
         {
             // Lock the object to ensure thread safety.
             lock (lockObject)

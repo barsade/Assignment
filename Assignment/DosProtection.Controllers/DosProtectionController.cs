@@ -11,10 +11,12 @@ namespace Assignment.Controllers
     public class DosProtectionController : ControllerBase
     {
         private readonly IDosProtectionService _dosProtectionService;
+        private readonly IConfiguration _config;
 
-        public DosProtectionController(IDosProtectionService dosProtectionService)
+        public DosProtectionController(IDosProtectionService dosProtectionService, IConfiguration config)
         {
             _dosProtectionService = dosProtectionService;
+            _config = config;
         }
         
         [HttpGet("StaticWindow/{clientId}")]
