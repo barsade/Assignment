@@ -7,10 +7,11 @@ namespace Assignment.DosProtection.DM.Models
 {
     public class DosProtectionClient : IDosProtectionClient
     {
+
         // This field keeps track of the number of requests made by the client.
         private int requestCounter = 0;
-        private int maxRequestsPerFrame = 4;
-        private int timeFrameInSeconds = 5;
+        private static int maxRequestsPerFrame;
+        private static int timeFrameThreshold;
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
@@ -22,9 +23,9 @@ namespace Assignment.DosProtection.DM.Models
 
         public DosProtectionClient(IConfiguration config)
         {
-            //_protectionType = protectionType;
             _config = config;
-            var str = _config["A"];
+            maxRequestsPerFrame = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
+            timeFrameThreshold = int.Parse(_config[Constants.TIME_FRAME_TRESHOLD]);
         }
 
         public bool CheckRequestRate(ProtectionType protectionType)

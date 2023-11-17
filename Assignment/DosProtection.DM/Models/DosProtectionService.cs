@@ -14,16 +14,16 @@ namespace Assignment.DosProtection.DM.Models
         private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _config;
-        private readonly IDosProtectionClient _dosProtectionClient;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<DosProtectionService> _logger;
 
         public DosProtectionService(IMemoryCache memoryCache, IServiceProvider serviceProvider,
-            IConfiguration config)
+            IConfiguration config, ILogger<DosProtectionService> logger)
         {
             _serviceProvider = serviceProvider;
-            //_dosProtectionClient = dosProtectionClient;
             _cache = memoryCache;
             _config = config;
+            _logger = logger;
         }
 
         // This method checks if the client identified by clientId can make another request.

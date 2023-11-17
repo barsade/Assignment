@@ -7,7 +7,8 @@
         {
             _config = config;
         }
-        public static readonly string STATIC_REQUESTS_ALLOWED = "";
-        public static readonly string DYNAMIC_REQUESTS_ALLOWED = "Dynamic_Requests_Allowed";
+        public static readonly string MAX_REQUESTS_ALLOWED = "MaxRequestsAllowed";
+        public static readonly string MAX_REQUESTS_PER_FRAME = "MaxRequestsAllowed";
+        public static readonly string TIME_FRAME_TRESHOLD = "TimeFrameTreshold";
     }
 }
