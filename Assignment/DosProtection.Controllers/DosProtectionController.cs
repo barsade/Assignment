@@ -21,7 +21,7 @@ namespace Assignment.Controllers
             _config = config;
             _logger = logger;
         }
-        
+
         [HttpGet("StaticWindow/{clientId}")]
         public async Task<HttpStatusCode> StaticWindow(string clientId)
         {
@@ -74,7 +74,7 @@ namespace Assignment.Controllers
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 _logger.LogError($"[DosProtectionController:DynamicWindow] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
                 return HttpStatusCode.InternalServerError;
             }
