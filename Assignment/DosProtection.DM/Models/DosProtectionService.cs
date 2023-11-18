@@ -10,13 +10,10 @@ namespace Assignment.DosProtection.DM.Models
     public class DosProtectionService : IDosProtectionService
     {
         private readonly ILogger<DosProtectionService> _logger;
-
-        // These dictionaries store DosProtectionClient instances for each client identified by clientId.
-        private readonly ConcurrentDictionary<string, IDosProtectionClient> _staticWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
-        private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
-        
         private readonly IMemoryCache _cache;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ConcurrentDictionary<string, IDosProtectionClient> _staticWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
+        private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
 
         public DosProtectionService(IMemoryCache memoryCache, IServiceProvider serviceProvider,
             ILogger<DosProtectionService> logger)
@@ -37,6 +34,8 @@ namespace Assignment.DosProtection.DM.Models
         {
             _logger.LogError($"Request: {clientId}, Thread: {Thread.CurrentThread.ManagedThreadId}");
             _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request of client ID: {clientId} with IP address: {clientIpAddress}.");
+           
+            // Get the relevant concurrent dictionary based on the protection type.
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.
