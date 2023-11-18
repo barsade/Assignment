@@ -28,7 +28,7 @@ namespace Assignment.DosProtection.DM.Models
 
         /// <summary>
         /// Checks if the client can make another request within the specified time frame
-        /// based on the client's IP address and client identifier.
+        /// based on the client's ID and IP address.
         /// </summary>
         /// <returns>
         ///   True if the client is allowed to make another request within the defined limits; otherwise, false.
@@ -36,7 +36,7 @@ namespace Assignment.DosProtection.DM.Models
         public bool ProcessClientRequest(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
             _logger.LogError($"Request: {clientId}, Thread: {Thread.CurrentThread.ManagedThreadId}");
-            _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request of client: {clientId} with IP address: {clientIpAddress}.");
+            _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request client ID: {clientId} with IP address: {clientIpAddress}.");
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.

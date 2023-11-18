@@ -17,6 +17,7 @@ namespace Assignment.DosProtection.Controllers
         public ShutdownController(KeySignalEvent processEvent, ILogger<ShutdownController> logger)
         {
             _processEvent = processEvent;
+            _logger = logger;
         }
 
         // HTTP endpoint that mocks the key press signal.
@@ -29,9 +30,9 @@ namespace Assignment.DosProtection.Controllers
                 _processEvent.OnHttpRequestReceived(key);
                 return HttpStatusCode.OK;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogError($"[ShutdownController:Shutdown] Error: {ex.Message}");
+                _logger.LogError($"[ShutdownController:Shutdown] An error occurred while processing key signal: {e}");
                 return HttpStatusCode.InternalServerError;
             }
 

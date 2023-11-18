@@ -30,7 +30,7 @@ namespace Assignment.Controllers
         {
             try
             {
-                _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Starts validating if client: {clientId} is permitted.");
+                _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Starts validating if client ID: {clientId} is permitted.");
 
                 // Fetch the client's IP address.
                 string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
@@ -39,18 +39,18 @@ namespace Assignment.Controllers
 
                 if (result)
                 {
-                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client: {clientId} with IP address: {clientIpAddress} is permitted.");
+                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client ID: {clientId} with IP address: {clientIpAddress} is permitted.");
                     return HttpStatusCode.OK;
                 }
                 else
                 {
-                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client: {clientId} with IP address: {clientIpAddress} is not permitted.");
+                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client ID: {clientId} with IP address: {clientIpAddress} is not permitted.");
                     return HttpStatusCode.ServiceUnavailable;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogError($"[DosProtectionController:{protectionType}Window] Error occurred while validating if client: {clientId} is permitted. Error: {ex.Message}");
+                _logger.LogError($"[DosProtectionController:{protectionType}Window] An error occurred while validating if client ID: {clientId} is permitted. Error: {e}");
                 return HttpStatusCode.InternalServerError;
             }
         }

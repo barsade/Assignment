@@ -22,39 +22,34 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Host.UseSerilog();
 
-        // Create the configuration object.
-        configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+        // Configure configuration.
+        ConfigureConfiguration();
 
         // Validate the configuration file.
         ValidateConfiguration(configuration);
 
         // Configure Serilog.
-        var logger = new LoggerConfiguration()
-            .MinimumLevel.Error()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File(path: configuration[Constants.LOG_PATH])
-            .Enrich.FromLogContext()
-            .CreateLogger();
+        Serilog.Core.Logger logger = ConfigureSerilog();
+
+        // Create Logger instance for internal use
+        log = app.Services.GetService<ILogger<Program>>();
 
         builder.Logging.ClearProviders();
         builder.Logging.AddSerilog(logger);
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddSingleton<IConfiguration>(configuration);
 
+        // Configure configuration and logging for dependency injection.
+        builder.Services.AddSingleton<IConfiguration>(configuration);
         builder.Services.AddSerilog(logger);
+
+        // Configure instances for dependency injection.
         builder.Services.AddMemoryCache();
         builder.Services.AddTransient<IDosProtectionClient, DosProtectionClient>();
         builder.Services.AddSingleton<IDosProtectionService, DosProtectionService>();
         builder.Services.AddSingleton<KeySignalEvent>();
 
-        //var app = builder.Build();
         app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -74,9 +69,6 @@ internal class Program
         app.UseAuthorization();
         app.MapControllers();
 
-        // Instantiate a Logger instance for internal use
-        log = app.Services.GetService<ILogger<Program>>();
-        
         // Instantiate a Singleton instance of the KeySignalEvent class
         var processEvent = app.Services.GetRequiredService<KeySignalEvent>();
 
@@ -99,14 +91,33 @@ internal class Program
         log.LogInformation($"[Program:HandleHttpRequest] Received key: {e.Key}");
         if (string.Equals(e.Key, configuration[Constants.EXIT_KEY], StringComparison.OrdinalIgnoreCase))
         {
-            log.LogInformation("[Program:HandleHttpRequest] Received exit key. Shutting down.");
+            log.LogInformation("[Program:HandleHttpRequest] Received exit key.");
+            log.LogInformation("[Program:HandleHttpRequest] Performing a controlled and graceful shutdown.");
             var hostApplicationLifetime = app.Services.GetService<IHostApplicationLifetime>();
             hostApplicationLifetime?.StopApplication();
         }
         else
         {
-            log.LogInformation("[Program:HandleHttpRequest] Received key is not the exit key. Ignoring.");
+            log.LogInformation("[Program:HandleHttpRequest] The received key is not the exit key. Ignoring.");
         }
+    }
+
+    private static void ConfigureConfiguration()
+    {
+        configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+    }
+
+    private static Serilog.Core.Logger ConfigureSerilog()
+    {
+        return new LoggerConfiguration()
+            .MinimumLevel.Error()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File(path: configuration[Constants.LOG_PATH])
+            .Enrich.FromLogContext()
+            .CreateLogger();
     }
 
     /// <summary>
