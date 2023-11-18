@@ -6,19 +6,17 @@ namespace Assignment.DosProtection.DM.Models
 {
     public class DosProtectionClient : IDosProtectionClient
     {
-
-        // This field keeps track of the number of requests made by the client.
+        private DateTime requestTime;
         private int requestCounter = 0;
         private static int MAX_REQUESTS_PER_FRAME;
         private static int TIME_FRAME_THRESHOLD;
 
-        // This field stores the timestamp of the client's last request.
-        private DateTime requestTime;
+        // This field stores the protection type, Static or Dynamic.
         private ProtectionType _protectionType;
+
         private readonly IConfiguration _config;
         private readonly ILogger<DosProtectionClient> _logger;
 
-        // This object is used for locking to ensure thread safety.
         private readonly object lockObject = new object();
 
         public DosProtectionClient(IConfiguration config, ILogger<DosProtectionClient> logger)
