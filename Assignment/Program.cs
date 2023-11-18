@@ -26,7 +26,7 @@ internal class Program
         Serilog.Core.Logger logger = ConfigureSerilog();
 
         // Create Logger instance for internal use
-        log = app.Services.GetService<ILogger<Program>>();
+        //log = app.Services.GetService<ILogger<Program>>();
 
         builder.Logging.ClearProviders();
         builder.Logging.AddSerilog(logger);
@@ -82,17 +82,17 @@ internal class Program
     /// <param name="e"></param>
     private static void HandleHttpRequest(object? sender, KeySignalEventArgs e)
     {
-        log.LogInformation($"[Program:HandleHttpRequest] Received key: {e.Key}");
+        //log.LogInformation($"[Program:HandleHttpRequest] Received key: {e.Key}");
         if (string.Equals(e.Key, configuration[Constants.EXIT_KEY], StringComparison.OrdinalIgnoreCase))
         {
-            log.LogInformation("[Program:HandleHttpRequest] Received exit key.");
-            log.LogInformation("[Program:HandleHttpRequest] Performing a controlled and graceful shutdown.");
+            //log.LogInformation("[Program:HandleHttpRequest] Received exit key.");
+            //log.LogInformation("[Program:HandleHttpRequest] Performing a controlled and graceful shutdown.");
             var hostApplicationLifetime = app.Services.GetService<IHostApplicationLifetime>();
             hostApplicationLifetime?.StopApplication();
         }
         else
         {
-            log.LogInformation("[Program:HandleHttpRequest] The received key is not the exit key. Ignoring.");
+            //log.LogInformation("[Program:HandleHttpRequest] The received key is not the exit key. Ignoring.");
         }
     }
 

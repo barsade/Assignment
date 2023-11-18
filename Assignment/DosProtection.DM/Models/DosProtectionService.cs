@@ -43,7 +43,7 @@ namespace Assignment.DosProtection.DM.Models
             var dosClientIp = _memoryCache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
             // Check if the client is allowed to make another request.
-            return dosClient.CheckRequestRate(protectionType) && dosClientIp.CheckRequestRate(protectionType);
+            return dosClient.CheckRequestRate(protectionType)/* && dosClientIp.CheckRequestRate(protectionType)*/;
         }
     }
 }

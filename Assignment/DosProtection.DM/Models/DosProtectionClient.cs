@@ -14,7 +14,6 @@ namespace Assignment.DosProtection.DM.Models
         private static int MAX_REQUESTS_PER_FRAME;
         private static int TIME_FRAME_THRESHOLD;
 
-        private ProtectionType _protectionType;
         private readonly object lockObject = new object();
 
         public DosProtectionClient(IConfiguration config, ILogger<DosProtectionClient> logger)
@@ -55,7 +54,7 @@ namespace Assignment.DosProtection.DM.Models
                     if (requestCounter > MAX_REQUESTS_PER_FRAME)
                     {
                         // If the protection type is dynamic, update the last request time
-                        if (_protectionType == ProtectionType.Dynamic)
+                        if (protectionType == ProtectionType.Dynamic)
                         {
                             requestTime = now;
                         }
