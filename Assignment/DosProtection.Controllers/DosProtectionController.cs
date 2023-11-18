@@ -13,7 +13,7 @@ namespace Assignment.Controllers
         private readonly IDosProtectionService _dosProtectionService;
         private readonly ILogger<DosProtectionController> _logger;
 
-        public DosProtectionController(IDosProtectionService dosProtectionService, IConfiguration config,
+        public DosProtectionController(IDosProtectionService dosProtectionService,
             ILogger<DosProtectionController> logger)
         {
             _dosProtectionService = dosProtectionService;
