@@ -2,7 +2,6 @@
 using Assignment.DosProtection.DM.Enum;
 using Assignment.DosProtection.DM.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Assignment.DosProtection.DM.Models
 {

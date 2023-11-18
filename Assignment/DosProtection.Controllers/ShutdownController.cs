@@ -1,9 +1,6 @@
 ﻿using Assignment.DosProtection.DM;
-using Assignment.DosProtection.DM.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Assignment.DosProtection.Controllers
 {
