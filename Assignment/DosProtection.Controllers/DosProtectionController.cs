@@ -23,57 +23,36 @@ namespace Assignment.Controllers
         }
 
         [HttpGet("StaticWindow/{clientId}")]
-        public async Task<HttpStatusCode> StaticWindow(string clientId)
-        {
-            try
-            {
-                _logger.LogInformation($"[DosProtectionController:StaticWindow] Starts validating if clientId: {clientId} is permitted.");
-                // Fetch the client's IP address.
-                string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-
-                bool result = await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, ProtectionType.Static));
-                if (result)
-                {
-                    _logger.LogInformation($"[DosProtectionController:StaticWindow] Client: {clientId} with IP address: {clientIpAddress} is permitted.");
-                    return HttpStatusCode.OK;
-                }
-                else
-                {
-                    _logger.LogInformation($"[DosProtectionController:StaticWindow] Client: {clientId} with IP address: {clientIpAddress} is not permitted.");
-                    return HttpStatusCode.ServiceUnavailable;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"[DosProtectionController:StaticWindow] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
-                return HttpStatusCode.InternalServerError;
-            }
-        }
+        public Task<HttpStatusCode> StaticWindow(string clientId) => HandleProtection(clientId, ProtectionType.Static);
 
         [HttpGet("DynamicWindow/{clientId}")]
-        public async Task<HttpStatusCode> DynamicWindow(string clientId)
+        public Task<HttpStatusCode> DynamicWindow(string clientId) => HandleProtection(clientId, ProtectionType.Dynamic);
+
+        private async Task<HttpStatusCode> HandleProtection(string clientId, ProtectionType protectionType)
         {
             try
             {
-                _logger.LogInformation($"[DosProtectionController:StaticWindow] Starts validating if clientId: {clientId} is permitted.");
+                _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Starts validating if clientId: {clientId} is permitted.");
+
                 // Fetch the client's IP address.
                 string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-                bool result = await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, ProtectionType.Dynamic));
+                bool result = await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, protectionType));
+
                 if (result)
                 {
-                    _logger.LogInformation($"[DosProtectionController:DynamicWindow] ClientId: {clientId} with IP address: {clientIpAddress} is permitted.");
+                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client: {clientId} with IP address: {clientIpAddress} is permitted.");
                     return HttpStatusCode.OK;
                 }
                 else
                 {
-                    _logger.LogInformation($"[DosProtectionController:DynamicWindow] ClientId: {clientId} with IP address: {clientIpAddress} is not permitted.");
+                    _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Client: {clientId} with IP address: {clientIpAddress} is not permitted.");
                     return HttpStatusCode.ServiceUnavailable;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"[DosProtectionController:DynamicWindow] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
+                _logger.LogError($"[DosProtectionController:{protectionType}Window] Error occurred while validating if clientId: {clientId} is permitted. Error: {ex.Message}");
                 return HttpStatusCode.InternalServerError;
             }
         }

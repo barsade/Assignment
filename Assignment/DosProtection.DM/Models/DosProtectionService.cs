@@ -9,7 +9,6 @@ namespace Assignment.DosProtection.DM.Models
     // This is the implementation of the DosProtectionService.
     public class DosProtectionService : IDosProtectionService
     {
-        private readonly IConfiguration _config;
         private readonly ILogger<DosProtectionService> _logger;
 
         // These dictionaries store DosProtectionClient instances for each client identified by clientId.
@@ -20,11 +19,10 @@ namespace Assignment.DosProtection.DM.Models
         private readonly IServiceProvider _serviceProvider;
 
         public DosProtectionService(IMemoryCache memoryCache, IServiceProvider serviceProvider,
-            IConfiguration config, ILogger<DosProtectionService> logger)
+            ILogger<DosProtectionService> logger)
         {
             _serviceProvider = serviceProvider;
             _cache = memoryCache;
-            _config = config;
             _logger = logger;
         }
 
