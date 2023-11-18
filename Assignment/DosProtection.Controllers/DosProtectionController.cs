@@ -11,14 +11,12 @@ namespace Assignment.Controllers
     public class DosProtectionController : ControllerBase
     {
         private readonly IDosProtectionService _dosProtectionService;
-        private readonly IConfiguration _config;
         private readonly ILogger<DosProtectionController> _logger;
 
         public DosProtectionController(IDosProtectionService dosProtectionService, IConfiguration config,
             ILogger<DosProtectionController> logger)
         {
             _dosProtectionService = dosProtectionService;
-            _config = config;
             _logger = logger;
         }
 
