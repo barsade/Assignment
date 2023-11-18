@@ -6,17 +6,15 @@ namespace Assignment.DosProtection.DM.Models
 {
     public class DosProtectionClient : IDosProtectionClient
     {
+        private readonly IConfiguration _config;
+        private readonly ILogger<DosProtectionClient> _logger;
+
         private DateTime requestTime;
         private int requestCounter = 0;
         private static int MAX_REQUESTS_PER_FRAME;
         private static int TIME_FRAME_THRESHOLD;
 
-        // This field stores the protection type, Static or Dynamic.
         private ProtectionType _protectionType;
-
-        private readonly IConfiguration _config;
-        private readonly ILogger<DosProtectionClient> _logger;
-
         private readonly object lockObject = new object();
 
         public DosProtectionClient(IConfiguration config, ILogger<DosProtectionClient> logger)

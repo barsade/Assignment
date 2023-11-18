@@ -5,7 +5,6 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Assignment.DosProtection.DM.Models
 {
-    // This is the implementation of the DosProtectionService.
     public class DosProtectionService : IDosProtectionService
     {
         private readonly ILogger<DosProtectionService> _logger;
