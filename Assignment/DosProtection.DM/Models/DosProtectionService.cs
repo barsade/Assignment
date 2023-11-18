@@ -36,7 +36,7 @@ namespace Assignment.DosProtection.DM.Models
         public bool ProcessClientRequest(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
             _logger.LogError($"Request: {clientId}, Thread: {Thread.CurrentThread.ManagedThreadId}");
-            _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request client ID: {clientId} with IP address: {clientIpAddress}.");
+            _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request of client ID: {clientId} with IP address: {clientIpAddress}.");
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.
