@@ -1,24 +1,35 @@
-﻿using Assignment.DosProtection.DM.Interfaces;
+﻿using Assignment.DosProtection.Controllers;
+using Assignment.DosProtection.DM;
+using Assignment.DosProtection.DM.Interfaces;
 using Assignment.DosProtection.DM.Models;
 using Assignment.Utils;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Threading;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static WebApplication app;
+    private static IConfigurationRoot configuration;
+    private static ILogger<Program> log;
+
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Host.UseSerilog();
 
         // Create the configuration object.
-        var configuration = new ConfigurationBuilder()
+        configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
         // Validate the configuration file.
         ValidateConfiguration(configuration);
-        
+
         // Configure Serilog.
         var logger = new LoggerConfiguration()
             .MinimumLevel.Error()
@@ -41,8 +52,10 @@ internal class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddTransient<IDosProtectionClient, DosProtectionClient>();
         builder.Services.AddSingleton<IDosProtectionService, DosProtectionService>();
+        builder.Services.AddSingleton<KeySignalEvent>();
 
-        var app = builder.Build();
+        //var app = builder.Build();
+        app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -61,7 +74,39 @@ internal class Program
         app.UseAuthorization();
         app.MapControllers();
 
-        app.Run();
+        // Instantiate a Logger instance for internal use
+        log = app.Services.GetService<ILogger<Program>>();
+        
+        // Instantiate a Singleton instance of the KeySignalEvent class
+        var processEvent = app.Services.GetRequiredService<KeySignalEvent>();
+
+        // Start a separate task to listen for the exit event
+        Task.Run(() =>
+        {
+            processEvent.HttpRequestReceived += HandleHttpRequest;
+        });
+
+        await app.RunAsync();
+    }
+
+    /// <summary>
+    /// Handles the HTTP request event serving as a key press signal mock and gracefully shuts down the application.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private static void HandleHttpRequest(object? sender, KeySignalEventArgs e)
+    {
+        log.LogInformation($"[Program:HandleHttpRequest] Received key: {e.Key}");
+        if (string.Equals(e.Key, configuration[Constants.EXIT_KEY], StringComparison.OrdinalIgnoreCase))
+        {
+            log.LogInformation("[Program:HandleHttpRequest] Received exit key. Shutting down.");
+            var hostApplicationLifetime = app.Services.GetService<IHostApplicationLifetime>();
+            hostApplicationLifetime?.StopApplication();
+        }
+        else
+        {
+            log.LogInformation("[Program:HandleHttpRequest] Received key is not the exit key. Ignoring.");
+        }
     }
 
     /// <summary>

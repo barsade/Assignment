@@ -46,17 +46,17 @@ namespace Assignment.DosProtection.DM.Models
                 // start a new time frame.
                 if (requestCounter == 0 || now - requestTime > TimeSpan.FromSeconds(TIME_FRAME_THRESHOLD))
                 {
-                    requestTime = now;  // Update the last request time.
-                    requestCounter = 1;   // Reset the request count.
+                    requestTime = now;  // Update the last request time
+                    requestCounter = 1;   // Reset the request count
                 }
                 else
                 {
                     requestCounter++;
 
-                    // If the client has made more than 5 requests within the time frame, return an error.
+                    // If the client has made more than 5 requests within the time frame, return an error
                     if (requestCounter > MAX_REQUESTS_PER_FRAME)
                     {
-                        // If the protection type is dynamic, update the last request time.
+                        // If the protection type is dynamic, update the last request time
                         if (_protectionType == ProtectionType.Dynamic)
                         {
                             requestTime = now;
