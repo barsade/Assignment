@@ -11,7 +11,7 @@ internal class Program
         builder.Host.UseSerilog();
 
         var logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
+            .MinimumLevel.Error()
             .Enrich.FromLogContext()
             .WriteTo.File(path: @"C:\Users\barsa\OneDrive\שולחן העבודה\מטלה\root.txt")
             .Enrich.FromLogContext()

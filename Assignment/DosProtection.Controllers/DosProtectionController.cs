@@ -31,7 +31,8 @@ namespace Assignment.Controllers
                 // Fetch the client's IP address.
                 string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-                if (await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, ProtectionType.Static)))
+                bool result = await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, ProtectionType.Static));
+                if (result)
                 {
                     _logger.LogInformation($"[DosProtectionController:StaticWindow] Client: {clientId} with IP address: {clientIpAddress} is permitted.");
                     return HttpStatusCode.OK;
