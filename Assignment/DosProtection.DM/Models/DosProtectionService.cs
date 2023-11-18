@@ -8,7 +8,7 @@ namespace Assignment.DosProtection.DM.Models
     public class DosProtectionService : IDosProtectionService
     {
         private readonly ILogger<DosProtectionService> _logger;
-        private readonly IMemoryCache _cache;
+        private readonly IMemoryCache _memoryCache;
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, IDosProtectionClient> _staticWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
         private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
@@ -17,7 +17,7 @@ namespace Assignment.DosProtection.DM.Models
             ILogger<DosProtectionService> logger)
         {
             _serviceProvider = serviceProvider;
-            _cache = memoryCache;
+            _memoryCache = memoryCache;
             _logger = logger;
         }
 
@@ -40,7 +40,7 @@ namespace Assignment.DosProtection.DM.Models
             var dosClient = windowClients.GetOrAdd(clientId, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
             // Get or add a DosProtectionClient instance for the client's IP address from cache.
-            var dosClientIp = _cache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
+            var dosClientIp = _memoryCache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
             // Check if the client is allowed to make another request.
             return dosClient.CheckRequestRate(protectionType) && dosClientIp.CheckRequestRate(protectionType);
