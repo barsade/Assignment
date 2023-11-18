@@ -1,15 +1,9 @@
-﻿using Assignment.DosProtection.Controllers;
-using Assignment.DosProtection.DM;
+﻿using Assignment.DosProtection.DM;
 using Assignment.DosProtection.DM.Interfaces;
 using Assignment.DosProtection.DM.Models;
 using Assignment.Utils;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
-using System.Threading;
 
 internal class Program
 {
@@ -22,8 +16,8 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Host.UseSerilog();
 
-        // Configure configuration.
-        ConfigureConfiguration();
+        // Build configuration.
+        BuildConfiguration();
 
         // Validate the configuration file.
         ValidateConfiguration(configuration);
@@ -102,7 +96,7 @@ internal class Program
         }
     }
 
-    private static void ConfigureConfiguration()
+    private static void BuildConfiguration()
     {
         configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
