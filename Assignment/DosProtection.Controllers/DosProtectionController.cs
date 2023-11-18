@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http.Features;
 
 namespace Assignment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DosProtectionController : ControllerBase
     {
