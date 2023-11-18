@@ -42,8 +42,8 @@ namespace Assignment.DosProtection.DM.Models
             // Get or add a DosProtectionClient instance for the client's IP address from cache.
             var dosClientIp = _cache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
-            // Call the ProcessClientRequest method of the DosProtectionClient instance.
-            return dosClient.CheckRequestRate(protectionType) /*&& dosClientIp.CheckRequestRate(protectionType)*/;
+            // Check if the client is allowed to make another request.
+            return dosClient.CheckRequestRate(protectionType) && dosClientIp.CheckRequestRate(protectionType);
         }
     }
 }
