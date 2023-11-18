@@ -31,9 +31,13 @@ namespace Assignment.Controllers
             {
                 _logger.LogInformation($"[DosProtectionController:{protectionType}Window] Starts validating if client ID: {clientId} is permitted.");
 
+                if (HttpContext.Connection.RemoteIpAddress == null)
+                {
+                    throw new Exception("IP address is null.");
+                }
+
                 // Fetch the client's IP address.
                 string clientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-
                 bool result = await Task.Run(() => _dosProtectionService.ProcessClientRequest(clientId, clientIpAddress, protectionType));
 
                 if (result)
