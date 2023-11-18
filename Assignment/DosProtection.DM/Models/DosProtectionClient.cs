@@ -1,7 +1,6 @@
 ﻿using Assignment.DosProtection.DM.Enum;
 using Assignment.DosProtection.DM.Interfaces;
 using Assignment.Utils;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Assignment.DosProtection.DM.Models
 {
@@ -10,8 +9,8 @@ namespace Assignment.DosProtection.DM.Models
 
         // This field keeps track of the number of requests made by the client.
         private int requestCounter = 0;
-        private static int MAX_REQUESTS_PER_FRAME = 5;
-        private static int TIME_FRAME_THRESHOLD = 15;
+        private static int MAX_REQUESTS_PER_FRAME;
+        private static int TIME_FRAME_THRESHOLD;
 
         // This field stores the timestamp of the client's last request.
         private DateTime requestTime;
@@ -26,9 +25,8 @@ namespace Assignment.DosProtection.DM.Models
         {
             _config = config;
             _logger = logger;
-            //MAX_REQUESTS_PER_FRAME = int.Parse(_config["MaxRequestsAllowed"]);
-            //MAX_REQUESTS_PER_FRAME = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
-            //TIME_FRAME_THRESHOLD = int.Parse(_config[Constants.TIME_FRAME_THRESHOLD]);
+            MAX_REQUESTS_PER_FRAME = int.Parse(_config[Constants.MAX_REQUESTS_PER_FRAME]);
+            TIME_FRAME_THRESHOLD = int.Parse(_config[Constants.TIME_FRAME_THRESHOLD]);
         }
 
         /// <summary>
