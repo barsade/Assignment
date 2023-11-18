@@ -42,7 +42,7 @@ namespace Assignment.DosProtection.DM.Models
             // Lock the object to ensure thread safety.
             lock (lockObject)
             {
-                _logger.LogDebug("[DosProtectionClient:CheckRequestRate] Thread obtained lock. Starts validating.");
+                _logger.LogDebug("[DosProtectionClient:ProcessClientRequest] Thread obtained lock. Starts validating.");
 
                 var now = DateTime.UtcNow;
 
@@ -65,14 +65,14 @@ namespace Assignment.DosProtection.DM.Models
                         {
                             requestTime = now;
                         }
-                        _logger.LogInformation("[DosProtectionClient:CheckRequestRate] Client is not allowed to make another request.");
+                        _logger.LogInformation("[DosProtectionClient:ProcessClientRequest] Client is not allowed to make another request.");
                         return false;
                     }
                 }
 
                 // The client is allowed to make another request.
-                _logger.LogInformation("[DosProtectionClient:CheckRequestRate] Client is allowed to make another request.");
-                _logger.LogDebug("[DosProtectionClient:CheckRequestRate] Thread released lock.");
+                _logger.LogInformation("[DosProtectionClient:ProcessClientRequest] Client is allowed to make another request.");
+                _logger.LogDebug("[DosProtectionClient:ProcessClientRequest] Thread released lock.");
                 return true;
             }
         }

@@ -9,13 +9,15 @@ namespace Assignment.DosProtection.DM.Models
     // This is the implementation of the DosProtectionService.
     public class DosProtectionService : IDosProtectionService
     {
-        // This dictionary stores DosProtectionClient instances for each client identified by clientId.
+        private readonly IConfiguration _config;
+        private readonly ILogger<DosProtectionService> _logger;
+
+        // These dictionaries store DosProtectionClient instances for each client identified by clientId.
         private readonly ConcurrentDictionary<string, IDosProtectionClient> _staticWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
         private readonly ConcurrentDictionary<string, IDosProtectionClient> _dynamicWindowClients = new ConcurrentDictionary<string, IDosProtectionClient>();
+        
         private readonly IMemoryCache _cache;
-        private readonly IConfiguration _config;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<DosProtectionService> _logger;
 
         public DosProtectionService(IMemoryCache memoryCache, IServiceProvider serviceProvider,
             IConfiguration config, ILogger<DosProtectionService> logger)
@@ -33,9 +35,9 @@ namespace Assignment.DosProtection.DM.Models
         /// <returns>
         ///   True if the client is allowed to make another request within the defined limits; otherwise, false.
         /// </returns>
-        public bool CheckRequestRate(string clientId, string clientIpAddress, ProtectionType protectionType)
+        public bool ProcessClientRequest(string clientId, string clientIpAddress, ProtectionType protectionType)
         {
-            _logger.LogDebug($"[DosProtectionService:CheckRequestRate] Starts processing the request of clientId: {clientId} with IP address: {clientIpAddress}.");
+            _logger.LogDebug($"[DosProtectionService:ProcessClientRequest] Starts processing the request of clientId: {clientId} with IP address: {clientIpAddress}.");
             var windowClients = protectionType == ProtectionType.Static ? _staticWindowClients : _dynamicWindowClients;
 
             // Get or add a DosProtectionClient instance for the clientId from the relevant concurrent dictionary.
@@ -44,7 +46,7 @@ namespace Assignment.DosProtection.DM.Models
             // Get or add a DosProtectionClient instance for the client's IP address from cache.
             var dosClientIp = _cache.GetOrCreate(clientIpAddress, entry => _serviceProvider.GetRequiredService<IDosProtectionClient>());
 
-            // Call the CheckRequestRate method of the DosProtectionClient instance.
+            // Call the ProcessClientRequest method of the DosProtectionClient instance.
             return dosClient.CheckRequestRate(protectionType) && dosClientIp.CheckRequestRate(protectionType);
         }
     }
